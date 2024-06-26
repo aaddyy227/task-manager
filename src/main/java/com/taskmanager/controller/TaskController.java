@@ -1,50 +1,43 @@
 package com.taskmanager.controller;
 
-import com.taskmanager.model.Task;
+import com.taskmanager.dto.TaskDTO;
 import com.taskmanager.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("/tasks")
 public class TaskController {
+    @Autowired
+    private TaskService taskService;
 
-    private final TaskService taskService;
-
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
+    @GetMapping
+    public List<TaskDTO> getAllTasks() {
+        return taskService.getAllTasks();
     }
 
     @PostMapping
-    public ResponseEntity<Task> addTask(@RequestBody Task task) {
-        Task newTask = taskService.saveTask(task);
-        return ResponseEntity.ok(newTask);
+    public TaskDTO createTask(@RequestBody TaskDTO taskDTO) {
+        return taskService.createTask(taskDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        Task task = taskService.getTaskById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with id " + id));
-        return ResponseEntity.ok(task);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks() {
-        List<Task> tasks = taskService.getAllTasks();
-        return ResponseEntity.ok(tasks);
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
+        return taskService.getTaskById(id).map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task taskDetails) {
-        Task updatedTask = taskService.updateTask(id, taskDetails);
-        return ResponseEntity.ok(updatedTask);
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+        return taskService.updateTask(id, taskDTO).map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
-        return ResponseEntity.ok().build();
+        return taskService.deleteTask(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 }

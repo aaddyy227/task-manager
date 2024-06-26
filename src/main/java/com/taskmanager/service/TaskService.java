@@ -1,43 +1,53 @@
 package com.taskmanager.service;
 
+import com.taskmanager.dto.TaskDTO;
+import com.taskmanager.mapper.TaskMapper;
 import com.taskmanager.model.Task;
 import com.taskmanager.repository.TaskRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
+    @Autowired
+    private TaskRepository taskRepository;
 
-    private final TaskRepository taskRepository;
+    @Autowired
+    private TaskMapper taskMapper;
 
-    public TaskService(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public List<TaskDTO> getAllTasks() {
+        return taskRepository.findAll().stream()
+                .map(taskMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Task saveTask(Task task) {
-        return taskRepository.save(task);
+    public Optional<TaskDTO> getTaskById(Long id) {
+        return taskRepository.findById(id).map(taskMapper::toDto);
     }
 
-    public Optional<Task> getTaskById(Long id) {
-        return taskRepository.findById(id);
+    public TaskDTO createTask(TaskDTO taskDTO) {
+        Task task = taskMapper.toEntity(taskDTO);
+        task.getSubTasks().forEach(subTask -> subTask.setParentTask(task));
+        return taskMapper.toDto(taskRepository.save(task));
     }
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public Optional<TaskDTO> updateTask(Long id, TaskDTO taskDTO) {
+        return taskRepository.findById(id).map(existingTask -> {
+            Task task = taskMapper.toEntity(taskDTO);
+            task.setId(existingTask.getId());
+            task.getSubTasks().forEach(subTask -> subTask.setParentTask(task));
+            return taskMapper.toDto(taskRepository.save(task));
+        });
     }
 
-    public Task updateTask(Long id, Task taskDetails) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
-        task.setTitle(taskDetails.getTitle());
-        task.setDescription(taskDetails.getDescription());
-        task.setDueDate(taskDetails.getDueDate());
-        task.setResponsibleId(taskDetails.getResponsibleId());
-        return taskRepository.save(task);
-    }
-
-    public void deleteTask(Long id) {
-        taskRepository.deleteById(id);
+    public boolean deleteTask(Long id) {
+        return taskRepository.findById(id).map(task -> {
+            taskRepository.delete(task);
+            return true;
+        }).orElse(false);
     }
 }
