@@ -1,6 +1,7 @@
 package com.taskmanager.controller;
 
 import com.taskmanager.dto.TaskDTO;
+import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,24 +21,38 @@ public class TaskController {
     }
 
     @PostMapping
-    public TaskDTO createTask(@RequestBody TaskDTO taskDTO) {
-        return taskService.createTask(taskDTO);
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
+        TaskDTO createdTask = taskService.createTask(taskDTO);
+        return ResponseEntity.ok(createdTask);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
-        return taskService.getTaskById(id).map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            TaskDTO taskDTO = taskService.getTaskById(id);
+            return ResponseEntity.ok(taskDTO);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
-        return taskService.updateTask(id, taskDTO).map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            TaskDTO updatedTask = taskService.updateTask(id, taskDTO).orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
+            return ResponseEntity.ok(updatedTask);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        return taskService.deleteTask(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        try {
+            boolean deleted = taskService.deleteTask(id);
+            return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

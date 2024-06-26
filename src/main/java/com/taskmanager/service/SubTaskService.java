@@ -1,6 +1,7 @@
 package com.taskmanager.service;
 
 import com.taskmanager.dto.SubtaskDTO;
+import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.mapper.SubTaskMapper;
 import com.taskmanager.model.SubTask;
 import com.taskmanager.repository.SubTaskRepository;
@@ -29,31 +30,33 @@ public class SubTaskService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<SubtaskDTO> getSubTaskById(Long id) {
-        return subTaskRepository.findById(id).map(subTaskMapper::toDto);
+    public SubtaskDTO getSubTaskById(Long id) {
+        return subTaskRepository.findById(id)
+                .map(subTaskMapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
     }
 
     public Optional<SubtaskDTO> createSubTask(Long taskId, SubtaskDTO subTaskDTO) {
-        return taskRepository.findById(taskId).map(task -> {
+        return Optional.ofNullable(taskRepository.findById(taskId).map(task -> {
             SubTask subTask = subTaskMapper.toEntity(subTaskDTO);
             subTask.setParentTask(task);
             return subTaskMapper.toDto(subTaskRepository.save(subTask));
-        });
+        }).orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + taskId)));
     }
 
     public Optional<SubtaskDTO> updateSubTask(Long id, SubtaskDTO subTaskDTO) {
-        return subTaskRepository.findById(id).map(existingSubTask -> {
+        return Optional.ofNullable(subTaskRepository.findById(id).map(existingSubTask -> {
             SubTask subTask = subTaskMapper.toEntity(subTaskDTO);
             subTask.setId(existingSubTask.getId());
             subTask.setParentTask(existingSubTask.getParentTask());
             return subTaskMapper.toDto(subTaskRepository.save(subTask));
-        });
+        }).orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id)));
     }
 
     public boolean deleteSubTask(Long id) {
         return subTaskRepository.findById(id).map(subTask -> {
             subTaskRepository.delete(subTask);
             return true;
-        }).orElse(false);
+        }).orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
     }
 }
