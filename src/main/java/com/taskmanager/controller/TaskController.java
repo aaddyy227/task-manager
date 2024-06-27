@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,8 +30,11 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskDTO> getAllTasks() {
-        return taskService.getAllTasks();
+    public ResponseEntity<List<TaskDTO>> getAllTasks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String responsible) {
+        List<TaskDTO> tasks = taskService.getAllTasks(title, responsible);
+        return ResponseEntity.ok(tasks);
     }
 
     @PostMapping
@@ -40,7 +44,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
+    public ResponseEntity<TaskDTO> getTaskDetails(@PathVariable Long id) {
         try {
             TaskDTO taskDTO = taskService.getTaskById(id);
             return ResponseEntity.ok(taskDTO);

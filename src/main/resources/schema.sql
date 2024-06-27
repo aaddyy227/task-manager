@@ -19,3 +19,11 @@ CREATE TABLE IF NOT EXISTS SubTask (
                                        parent_task_id BIGINT,
                                        FOREIGN KEY (parent_task_id) REFERENCES Task(id)
 );
+
+CREATE TABLE IF NOT EXISTS Comment (
+                                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                       content TEXT NOT NULL,
+                                       createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                       task_id BIGINT,
+                                       FOREIGN KEY (task_id) REFERENCES Task(id)
+);
