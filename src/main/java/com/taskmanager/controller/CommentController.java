@@ -6,14 +6,7 @@ import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +20,9 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    /**
+     * Get all comments for a specific task by task ID.
+     */
     @GetMapping("/task/{taskId}")
     public ResponseEntity<List<CommentDTO>> getCommentsByTaskId(@PathVariable String taskId) {
         try {
@@ -37,6 +33,9 @@ public class CommentController {
         }
     }
 
+    /**
+     * Add a comment to a specific task by task ID.
+     */
     @PostMapping("/task/add/{taskId}")
     public ResponseEntity<String> addCommentToTask(@PathVariable String taskId, @RequestBody CommentRequest commentRequest) {
         try {
@@ -46,6 +45,9 @@ public class CommentController {
         }
     }
 
+    /**
+     * Update an existing comment by comment ID.
+     */
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentDTO> updateComment(@PathVariable String commentId, @RequestBody CommentDTO commentDTO) {
         try {
@@ -57,6 +59,9 @@ public class CommentController {
         }
     }
 
+    /**
+     * Delete a comment by comment ID.
+     */
     @DeleteMapping("/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable String commentId) {
         try {

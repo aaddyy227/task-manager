@@ -15,7 +15,8 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
 
-    // Gestionarea excepțiilor generale
+    //Handles all general exceptions.
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
@@ -25,7 +26,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // Gestionarea excepțiilor specifice
+
+    //Handles specific exceptions of type ResourceNotFoundException.
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
@@ -35,7 +37,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    // Gestionarea validărilor argumentelor
+
+    //Handles validation exceptions for method arguments.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, Object> errors = new HashMap<>();

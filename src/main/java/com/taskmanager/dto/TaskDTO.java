@@ -1,14 +1,12 @@
 package com.taskmanager.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -23,6 +21,6 @@ public class TaskDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
     private String responsible;
-    private List<SubtaskDTO> subTasks = new ArrayList<>();
-    private List<CommentDTO> comments = new ArrayList<>();
+    private List<SubtaskDTO> subTasks;
+    private List<CommentDTO> comments;
 }

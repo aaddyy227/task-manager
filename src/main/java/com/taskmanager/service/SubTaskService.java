@@ -2,11 +2,9 @@ package com.taskmanager.service;
 
 import com.taskmanager.dto.SubTaskRequest;
 import com.taskmanager.dto.SubtaskDTO;
-import com.taskmanager.exception.GlobalExceptionHandler;
 import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.mapper.SubTaskMapper;
 import com.taskmanager.model.SubTask;
-import com.taskmanager.model.Task;
 import com.taskmanager.repository.SubTaskRepository;
 import com.taskmanager.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +29,7 @@ public class SubTaskService {
     }
 
     /**
-     * Retrieves all subtasks.
-     *
-     * @return A list of SubtaskDTOs representing all subtasks.
+     * Get all subtasks.
      */
     public List<SubtaskDTO> getAllSubTasks() {
         return subTaskRepository.findAll().stream()
@@ -42,11 +38,7 @@ public class SubTaskService {
     }
 
     /**
-     * Retrieves a subtask by its ID.
-     *
-     * @param id The ID of the subtask to retrieve.
-     * @return The SubtaskDTO corresponding to the given ID.
-     * @throws ResourceNotFoundException if the subtask is not found.
+     * Get a subtask by its ID.
      */
     public SubtaskDTO getSubTaskById(String id) {
         return subTaskRepository.findById(id)
@@ -54,17 +46,8 @@ public class SubTaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
     }
 
-
-
-
-
     /**
-     * Updates an existing subtask.
-     *
-     * @param id          The ID of the subtask to update.
-     * @param subTaskDTO  The data transfer object representing the updated subtask.
-     * @return An Optional containing the updated SubtaskDTO if the update was successful.
-     * @throws ResourceNotFoundException if the subtask is not found.
+     * Update an existing subtask by ID.
      */
     public Optional<SubtaskDTO> updateSubTask(String id, SubtaskDTO subTaskDTO) {
         return Optional.ofNullable(subTaskRepository.findById(id).map(existingSubTask -> {
@@ -77,11 +60,7 @@ public class SubTaskService {
     }
 
     /**
-     * Deletes a subtask by its ID.
-     *
-     * @param id The ID of the subtask to delete.
-     * @return A message indicating the subtask was deleted.
-     * @throws ResourceNotFoundException if the subtask is not found.
+     * Delete a subtask by its ID.
      */
     public String deleteSubTask(String id) {
         return subTaskRepository.findById(id).map(subTask -> {

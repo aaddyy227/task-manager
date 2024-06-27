@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, String> {
-    List<Comment> findByTaskId(String taskId);
+    Optional<List<Comment>> findByTaskId(String taskId);
 }

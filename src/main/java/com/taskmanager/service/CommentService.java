@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,15 +29,21 @@ public class CommentService {
         this.commentMapper = commentMapper;
     }
 
+    /**
+     * Get all comments for a specific task by task ID.
+     */
     public List<CommentDTO> getCommentsByTaskId(String taskId) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + taskId));
-
-        return commentRepository.findByTaskId(taskId).stream()
+        Optional<List<Comment>> comment = commentRepository.findByTaskId(taskId);
+        if(comment.isPresent()){
+        return comment.get().stream()
                 .map(commentMapper::toDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());}
+        else throw new ResourceNotFoundException("No comments for task with id: "+taskId);
     }
 
+    /**
+     * Add a comment to a specific task.
+     */
     public String addCommentToTask(String taskId, CommentRequest commentRequest) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + taskId));
@@ -53,6 +58,9 @@ public class CommentService {
         return "Comment added!";
     }
 
+    /**
+     * Update an existing comment by comment ID.
+     */
     public Optional<CommentDTO> updateComment(String commentId, CommentDTO commentDTO) {
         return Optional.ofNullable(commentRepository.findById(commentId).map(existingComment -> {
             existingComment.setContent(commentDTO.getContent());
@@ -61,6 +69,9 @@ public class CommentService {
         }).orElseThrow(() -> new ResourceNotFoundException("Comment not found with id " + commentId)));
     }
 
+    /**
+     * Delete a comment by comment ID.
+     */
     public String deleteComment(String commentId) {
         return commentRepository.findById(commentId).map(comment -> {
             commentRepository.delete(comment);
