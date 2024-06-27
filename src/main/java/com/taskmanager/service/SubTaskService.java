@@ -1,9 +1,12 @@
 package com.taskmanager.service;
 
+import com.taskmanager.dto.SubTaskRequest;
 import com.taskmanager.dto.SubtaskDTO;
+import com.taskmanager.exception.GlobalExceptionHandler;
 import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.mapper.SubTaskMapper;
 import com.taskmanager.model.SubTask;
+import com.taskmanager.model.Task;
 import com.taskmanager.repository.SubTaskRepository;
 import com.taskmanager.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,28 +30,45 @@ public class SubTaskService {
         this.subTaskMapper = subTaskMapper;
     }
 
+    /**
+     * Retrieves all subtasks.
+     *
+     * @return A list of SubtaskDTOs representing all subtasks.
+     */
     public List<SubtaskDTO> getAllSubTasks() {
         return subTaskRepository.findAll().stream()
                 .map(subTaskMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public SubtaskDTO getSubTaskById(Long id) {
+    /**
+     * Retrieves a subtask by its ID.
+     *
+     * @param id The ID of the subtask to retrieve.
+     * @return The SubtaskDTO corresponding to the given ID.
+     * @throws ResourceNotFoundException if the subtask is not found.
+     */
+    public SubtaskDTO getSubTaskById(String id) {
         return subTaskRepository.findById(id)
                 .map(subTaskMapper::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
     }
 
-    public Optional<SubtaskDTO> createSubTask(Long taskId, SubtaskDTO subTaskDTO) {
-        return Optional.ofNullable(taskRepository.findById(taskId).map(task -> {
-            SubTask subTask = subTaskMapper.toEntity(subTaskDTO);
-            subTask.setParentTask(task);
-            return subTaskMapper.toDto(subTaskRepository.save(subTask));
-        }).orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + taskId)));
-    }
 
-    public Optional<SubtaskDTO> updateSubTask(Long id, SubtaskDTO subTaskDTO) {
+
+
+
+    /**
+     * Updates an existing subtask.
+     *
+     * @param id          The ID of the subtask to update.
+     * @param subTaskDTO  The data transfer object representing the updated subtask.
+     * @return An Optional containing the updated SubtaskDTO if the update was successful.
+     * @throws ResourceNotFoundException if the subtask is not found.
+     */
+    public Optional<SubtaskDTO> updateSubTask(String id, SubtaskDTO subTaskDTO) {
         return Optional.ofNullable(subTaskRepository.findById(id).map(existingSubTask -> {
+            // Map the DTO to an entity and update its ID to the existing subtask's ID
             SubTask subTask = subTaskMapper.toEntity(subTaskDTO);
             subTask.setId(existingSubTask.getId());
             subTask.setParentTask(existingSubTask.getParentTask());
@@ -56,10 +76,17 @@ public class SubTaskService {
         }).orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id)));
     }
 
-    public String deleteSubTask(Long id) {
+    /**
+     * Deletes a subtask by its ID.
+     *
+     * @param id The ID of the subtask to delete.
+     * @return A message indicating the subtask was deleted.
+     * @throws ResourceNotFoundException if the subtask is not found.
+     */
+    public String deleteSubTask(String id) {
         return subTaskRepository.findById(id).map(subTask -> {
             subTaskRepository.delete(subTask);
-            return "Deleted subtask with id:" +id;
+            return "Deleted subtask with id: " + id;
         }).orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
     }
 }

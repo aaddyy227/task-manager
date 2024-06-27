@@ -1,7 +1,11 @@
 package com.taskmanager.controller;
 
+import com.taskmanager.dto.SubTaskRequest;
+import com.taskmanager.dto.SubtaskDTO;
 import com.taskmanager.dto.TaskDTO;
+import com.taskmanager.dto.TaskRequest;
 import com.taskmanager.exception.ResourceNotFoundException;
+import com.taskmanager.model.SubTask;
 import com.taskmanager.service.SubTaskService;
 import com.taskmanager.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +33,7 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<TaskDTO>> getAllTasks(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String responsible) {
@@ -37,14 +41,14 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
-    @PostMapping
-    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
-        TaskDTO createdTask = taskService.createTask(taskDTO);
+    @PostMapping("/add")
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskRequest taskRequest) {
+        TaskDTO createdTask = taskService.createTask(taskRequest);
         return ResponseEntity.ok(createdTask);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> getTaskDetails(@PathVariable Long id) {
+    public ResponseEntity<TaskDTO> getTaskDetails(@PathVariable String id) {
         try {
             TaskDTO taskDTO = taskService.getTaskById(id);
             return ResponseEntity.ok(taskDTO);
@@ -54,7 +58,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable String id, @RequestBody TaskDTO taskDTO) {
         try {
             TaskDTO updatedTask = taskService.updateTask(id, taskDTO).orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
             return ResponseEntity.ok(updatedTask);
@@ -64,11 +68,22 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTask(@PathVariable Long id) {
+    public ResponseEntity<String> deleteTask(@PathVariable String id) {
         try {
             return ResponseEntity.ok(taskService.deleteTask(id));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.notFound().build();
+        }
+    }
+    @PostMapping("/{taskId}/subtasks")
+    public ResponseEntity<TaskDTO> addSubTask(@PathVariable String taskId, @RequestBody SubTaskRequest subTaskRequest) {
+        try {
+            TaskDTO subTask = taskService.addSubtask(taskId, subTaskRequest);
+            return ResponseEntity.ok(subTask);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 }

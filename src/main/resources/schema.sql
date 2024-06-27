@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS task_manager;
 USE task_manager;
 
 CREATE TABLE IF NOT EXISTS Task (
-                                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                    id VARCHAR(36) NOT NULL PRIMARY KEY,
                                     title VARCHAR(255) NOT NULL,
                                     description TEXT,
                                     dueDate DATE,
@@ -11,19 +11,20 @@ CREATE TABLE IF NOT EXISTS Task (
 );
 
 CREATE TABLE IF NOT EXISTS SubTask (
-                                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                       id VARCHAR(36) NOT NULL PRIMARY KEY,
                                        title VARCHAR(255) NOT NULL,
                                        description TEXT,
                                        dueDate DATE,
                                        responsible VARCHAR(255),
-                                       parent_task_id BIGINT,
+                                       parent_task_id VARCHAR(36),
                                        FOREIGN KEY (parent_task_id) REFERENCES Task(id)
 );
 
 CREATE TABLE IF NOT EXISTS Comment (
-                                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                       id VARCHAR(36) NOT NULL PRIMARY KEY,
                                        content TEXT NOT NULL,
-                                       createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                       task_id BIGINT,
+                                       createdDate DATETIME,
+                                       updatedDate DATETIME,
+                                       task_id VARCHAR(36),
                                        FOREIGN KEY (task_id) REFERENCES Task(id)
 );

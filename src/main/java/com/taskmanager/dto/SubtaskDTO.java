@@ -1,21 +1,24 @@
 package com.taskmanager.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 public class SubtaskDTO {
     private String id;
     private String title;
     private String description;
-    private Date dueDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate dueDate;
     private String responsible;
 }
