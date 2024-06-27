@@ -11,7 +11,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class SubtaskDTO extends TaskDTO {
+public class SubtaskDTO {
+    private String id;
     private String title;
     private String description;
     private Date dueDate;

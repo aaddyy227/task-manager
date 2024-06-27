@@ -12,8 +12,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/subtasks")
 public class SubTaskController {
+    private final SubTaskService subTaskService;
+
     @Autowired
-    private SubTaskService subTaskService;
+    public SubTaskController(SubTaskService subTaskService) {
+        this.subTaskService = subTaskService;
+    }
 
     @GetMapping
     public List<SubtaskDTO> getAllSubTasks() {
@@ -51,10 +55,9 @@ public class SubTaskController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSubTask(@PathVariable Long id) {
+    public ResponseEntity<String> deleteSubTask(@PathVariable Long id) {
         try {
-            boolean deleted = subTaskService.deleteSubTask(id);
-            return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+            return ResponseEntity.ok(subTaskService.deleteSubTask(id));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }

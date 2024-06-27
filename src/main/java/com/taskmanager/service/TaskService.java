@@ -3,6 +3,7 @@ package com.taskmanager.service;
 import com.taskmanager.dto.TaskDTO;
 import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.mapper.TaskMapper;
+import com.taskmanager.model.SubTask;
 import com.taskmanager.model.Task;
 import com.taskmanager.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
 
     @Autowired
-    private TaskMapper taskMapper;
+    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper) {
+        this.taskRepository = taskRepository;
+        this.taskMapper = taskMapper;
+    }
 
     public List<TaskDTO> getAllTasks() {
         return taskRepository.findAll().stream()
@@ -42,15 +46,24 @@ public class TaskService {
         return Optional.ofNullable(taskRepository.findById(id).map(existingTask -> {
             Task task = taskMapper.toEntity(taskDTO);
             task.setId(existingTask.getId());
-            task.getSubTasks().forEach(subTask -> subTask.setParentTask(task));
+
+            for (SubTask subTask : task.getSubTasks()) {
+                subTask.setParentTask(task);
+            }
+
+            List<Long> subTaskIds = task.getSubTasks().stream()
+                    .map(SubTask::getId)
+                    .toList();
+            existingTask.getSubTasks().removeIf(subTask -> !subTaskIds.contains(subTask.getId()));
+
             return taskMapper.toDto(taskRepository.save(task));
         }).orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id)));
     }
 
-    public boolean deleteTask(Long id) {
+    public String deleteTask(Long id) {
         return taskRepository.findById(id).map(task -> {
             taskRepository.delete(task);
-            return true;
+            return "Deleted task with id:" + id;
         }).orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
     }
 }

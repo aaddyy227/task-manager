@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface SubTaskMapper {
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "parentTask", ignore = true)
     SubTask toEntity(SubtaskDTO dto);
 
     SubtaskDTO toDto(SubTask entity);

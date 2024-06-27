@@ -2,18 +2,31 @@ package com.taskmanager.controller;
 
 import com.taskmanager.dto.TaskDTO;
 import com.taskmanager.exception.ResourceNotFoundException;
+import com.taskmanager.service.SubTaskService;
 import com.taskmanager.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
+
+    private final TaskService taskService;
+
     @Autowired
-    private TaskService taskService;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @GetMapping
     public List<TaskDTO> getAllTasks() {
@@ -47,10 +60,9 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+    public ResponseEntity<String> deleteTask(@PathVariable Long id) {
         try {
-            boolean deleted = taskService.deleteTask(id);
-            return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+            return ResponseEntity.ok(taskService.deleteTask(id));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }

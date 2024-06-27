@@ -15,14 +15,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class SubTaskService {
-    @Autowired
-    private SubTaskRepository subTaskRepository;
+
+    private final SubTaskRepository subTaskRepository;
+    private final TaskRepository taskRepository;
+    private final SubTaskMapper subTaskMapper;
 
     @Autowired
-    private TaskRepository taskRepository;
-
-    @Autowired
-    private SubTaskMapper subTaskMapper;
+    public SubTaskService(SubTaskRepository subTaskRepository, TaskRepository taskRepository, SubTaskMapper subTaskMapper) {
+        this.subTaskRepository = subTaskRepository;
+        this.taskRepository = taskRepository;
+        this.subTaskMapper = subTaskMapper;
+    }
 
     public List<SubtaskDTO> getAllSubTasks() {
         return subTaskRepository.findAll().stream()
@@ -53,10 +56,10 @@ public class SubTaskService {
         }).orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id)));
     }
 
-    public boolean deleteSubTask(Long id) {
+    public String deleteSubTask(Long id) {
         return subTaskRepository.findById(id).map(subTask -> {
             subTaskRepository.delete(subTask);
-            return true;
+            return "Deleted subtask with id:" +id;
         }).orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
     }
 }
