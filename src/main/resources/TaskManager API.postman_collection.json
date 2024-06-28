@@ -1,0 +1,1113 @@
+{
+	"info": {
+		"_postman_id": "640dbb6b-9daf-481d-9918-1daddedfb053",
+		"name": "TaskManager API",
+		"description": "A collection of APIs for the TaskManager application.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8758401",
+		"_collection_link": "https://task-manager-api-6450.postman.co/workspace/Task-Manager-API-Workspace~6bd3653c-66ab-4b5a-8719-5b8a304571bd/collection/8758401-640dbb6b-9daf-481d-9918-1daddedfb053?action=share&source=collection_link&creator=8758401"
+	},
+	"item": [
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Add Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New Task 1234\",\r\n    \"description\": \"Task Description\",\r\n    \"dueDate\": \"2024-06-28\",\r\n    \"responsible\": \"John Doe\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/tasks/add",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"add"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Add Task",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"New Task 123\",\r\n    \"description\": \"Task Description\",\r\n    \"dueDate\": \"2024-06-28\",\r\n    \"responsible\": \"John Doe\"\r\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/tasks/add",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"tasks",
+										"add"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:37:23 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"4146fcf2-8388-43bb-a61b-4f3f1de8f622\",\n    \"title\": \"New Task 123\",\n    \"description\": \"Task Description\",\n    \"dueDate\": \"2024-06-28\",\n    \"responsible\": \"John Doe\",\n    \"subTasks\": null,\n    \"comments\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/tasks/all",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"all"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "New Task",
+									"disabled": true
+								},
+								{
+									"key": "responsible",
+									"value": "John Doe",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Tasks",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/tasks/all",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"tasks",
+										"all"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "New Task",
+											"disabled": true
+										},
+										{
+											"key": "responsible",
+											"value": "John Doe",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:37:56 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"0b49ae07-534e-414b-95d7-335d1620dafb\",\n        \"title\": \"Task 1\",\n        \"description\": \"Task 1 Description\",\n        \"dueDate\": \"2024-06-29\",\n        \"responsible\": \"Adrian Zimbran\",\n        \"subTasks\": [\n            {\n                \"id\": \"a99784c9-feb3-4b82-9aa4-6ce13ea3292d\",\n                \"title\": \"New Subtask\",\n                \"description\": \"Subtask Description\",\n                \"dueDate\": \"2024-06-28\",\n                \"responsible\": \"Jane Doe\"\n            }\n        ],\n        \"comments\": []\n    },\n    {\n        \"id\": \"3b563914-9dd5-4ff5-90e2-827f6cf032d4\",\n        \"title\": \"New Task\",\n        \"description\": \"Task Description\",\n        \"dueDate\": \"2024-06-28\",\n        \"responsible\": \"John Doe\",\n        \"subTasks\": [],\n        \"comments\": []\n    },\n    {\n        \"id\": \"4146fcf2-8388-43bb-a61b-4f3f1de8f622\",\n        \"title\": \"New Task 123\",\n        \"description\": \"Task Description\",\n        \"dueDate\": \"2024-06-28\",\n        \"responsible\": \"John Doe\",\n        \"subTasks\": [],\n        \"comments\": []\n    },\n    {\n        \"id\": \"9eb70367-0858-4c4d-a11f-989b1826049f\",\n        \"title\": \"Task Title 12\",\n        \"description\": \"Task Description\",\n        \"dueDate\": \"2024-06-26\",\n        \"responsible\": \"John Doe\",\n        \"subTasks\": [],\n        \"comments\": []\n    },\n    {\n        \"id\": \"b04d19cc-4ec7-4c75-8ab0-b376e39acbc3\",\n        \"title\": \"Updated Task Title\",\n        \"description\": \"Updated Task Description\",\n        \"dueDate\": \"2024-06-26\",\n        \"responsible\": \"John Doe\",\n        \"subTasks\": [\n            {\n                \"id\": \"38ce2532-4c76-4d02-bbc8-d5a7e603aa13\",\n                \"title\": \"SubTask Title1\",\n                \"description\": \"SubTask Description\",\n                \"dueDate\": \"2024-06-26\",\n                \"responsible\": \"Jane Doe\"\n            },\n            {\n                \"id\": \"c0f2135f-a076-4662-8c96-771cfc729596\",\n                \"title\": \"Updated SubTask Title\",\n                \"description\": \"Updated SubTask Description\",\n                \"dueDate\": \"2024-06-29\",\n                \"responsible\": \"Jane Doe\"\n            }\n        ],\n        \"comments\": [\n            {\n                \"id\": \"33c60eba-cf26-4625-8096-5267c1fdad53\",\n                \"content\": \"This is a comment.TEST#3\",\n                \"createdDate\": \"2024-06-28 03:17\",\n                \"updatedDate\": \"2024-06-28 03:17\"\n            },\n            {\n                \"id\": \"64bb36f4-3fbf-464b-9913-6d537e357819\",\n                \"content\": \"This is a comment.TEST#2\",\n                \"createdDate\": \"2024-06-28 03:17\",\n                \"updatedDate\": \"2024-06-28 03:17\"\n            }\n        ]\n    },\n    {\n        \"id\": \"d45d0650-b5d0-4d4f-81c2-d91d9299f7f2\",\n        \"title\": \"Task Title 1234\",\n        \"description\": \"Task Description\",\n        \"dueDate\": \"2024-06-26\",\n        \"responsible\": \"John Doe\",\n        \"subTasks\": [],\n        \"comments\": []\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Task by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/tasks/{{id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"{{id}}"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Task by ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/tasks/0b49ae07-534e-414b-95d7-335d1620dafb",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"tasks",
+										"0b49ae07-534e-414b-95d7-335d1620dafb"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:38:04 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"0b49ae07-534e-414b-95d7-335d1620dafb\",\n    \"title\": \"Task 1\",\n    \"description\": \"Task 1 Description\",\n    \"dueDate\": \"2024-06-29\",\n    \"responsible\": \"Adrian Zimbran\",\n    \"subTasks\": [\n        {\n            \"id\": \"a99784c9-feb3-4b82-9aa4-6ce13ea3292d\",\n            \"title\": \"New Subtask\",\n            \"description\": \"Subtask Description\",\n            \"dueDate\": \"2024-06-28\",\n            \"responsible\": \"Jane Doe\"\n        }\n    ],\n    \"comments\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Task",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"title\":\"Updated Task Title\",\"description\":\"Updated Task Description\",\"dueDate\":\"2024-06-28\",\"responsible\":\"John Doe\"}"
+						},
+						"url": {
+							"raw": "localhost:8080/tasks/{{id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"{{id}}"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Task",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Updated Task Title\",\r\n    \"description\": \"Updated Task Description\",\r\n    \"dueDate\": \"2024-06-28\",\r\n    \"responsible\": \"John Doe\"\r\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/tasks/0b49ae07-534e-414b-95d7-335d1620dafb",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"tasks",
+										"0b49ae07-534e-414b-95d7-335d1620dafb"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:38:57 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"0b49ae07-534e-414b-95d7-335d1620dafb\",\n    \"title\": \"Updated Task Title\",\n    \"description\": \"Updated Task Description\",\n    \"dueDate\": \"2024-06-28\",\n    \"responsible\": \"John Doe\",\n    \"subTasks\": [\n        {\n            \"id\": \"a99784c9-feb3-4b82-9aa4-6ce13ea3292d\",\n            \"title\": \"New Subtask\",\n            \"description\": \"Subtask Description\",\n            \"dueDate\": \"2024-06-28\",\n            \"responsible\": \"Jane Doe\"\n        }\n    ],\n    \"comments\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/tasks/{{id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"{{id}}"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Task",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/tasks/0b49ae07-534e-414b-95d7-335d1620dafb",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"tasks",
+										"0b49ae07-534e-414b-95d7-335d1620dafb"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "58"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:39:20 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "Deleted task with id: 0b49ae07-534e-414b-95d7-335d1620dafb"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "SubTasks",
+			"item": [
+				{
+					"name": "Add Subtask",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"title\":\"New Subtask\",\"description\":\"Subtask Description\",\"dueDate\":\"2024-06-28\",\"responsible\":\"Jane Doe\"}"
+						},
+						"url": {
+							"raw": "localhost:8080/subtasks/add/{{taskId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"subtasks",
+								"add",
+								"{{taskId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Add Subtask",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"New Subtask 12\",\r\n    \"description\": \"Subtask Description\",\r\n    \"dueDate\": \"2024-06-28\",\r\n    \"responsible\": \"Jane Doe\"\r\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/subtasks/add/3b563914-9dd5-4ff5-90e2-827f6cf032d4",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subtasks",
+										"add",
+										"3b563914-9dd5-4ff5-90e2-827f6cf032d4"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:40:19 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"3b563914-9dd5-4ff5-90e2-827f6cf032d4\",\n    \"title\": \"New Task\",\n    \"description\": \"Task Description\",\n    \"dueDate\": \"2024-06-28\",\n    \"responsible\": \"John Doe\",\n    \"subTasks\": [\n        {\n            \"id\": \"9aab58c0-6a68-498f-862f-6cb65052a135\",\n            \"title\": \"New Subtask\",\n            \"description\": \"Subtask Description\",\n            \"dueDate\": \"2024-06-28\",\n            \"responsible\": \"Jane Doe\"\n        },\n        {\n            \"id\": \"1cfd3df9-321f-4787-97c8-23274c2d9112\",\n            \"title\": \"New Subtask 12\",\n            \"description\": \"Subtask Description\",\n            \"dueDate\": \"2024-06-28\",\n            \"responsible\": \"Jane Doe\"\n        }\n    ],\n    \"comments\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Subtasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/subtasks/all",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"subtasks",
+								"all"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Subtasks",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/subtasks/all",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subtasks",
+										"all"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:40:53 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"1cfd3df9-321f-4787-97c8-23274c2d9112\",\n        \"title\": \"New Subtask 12\",\n        \"description\": \"Subtask Description\",\n        \"dueDate\": \"2024-06-28\",\n        \"responsible\": \"Jane Doe\"\n    },\n    {\n        \"id\": \"38ce2532-4c76-4d02-bbc8-d5a7e603aa13\",\n        \"title\": \"SubTask Title1\",\n        \"description\": \"SubTask Description\",\n        \"dueDate\": \"2024-06-26\",\n        \"responsible\": \"Jane Doe\"\n    },\n    {\n        \"id\": \"9aab58c0-6a68-498f-862f-6cb65052a135\",\n        \"title\": \"New Subtask\",\n        \"description\": \"Subtask Description\",\n        \"dueDate\": \"2024-06-28\",\n        \"responsible\": \"Jane Doe\"\n    },\n    {\n        \"id\": \"c0f2135f-a076-4662-8c96-771cfc729596\",\n        \"title\": \"Updated SubTask Title\",\n        \"description\": \"Updated SubTask Description\",\n        \"dueDate\": \"2024-06-29\",\n        \"responsible\": \"Jane Doe\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Update Subtask",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Updated Subtask Title\",\r\n    \"description\": \"Updated Subtask Description\",\r\n    \"dueDate\": \"2024-06-28\",\r\n    \"responsible\": \"Jane Doe\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/subtasks/{{id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"subtasks",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Subtask",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Updated Subtask Title\",\r\n    \"description\": \"Updated Subtask Description\",\r\n    \"dueDate\": \"2024-06-28\",\r\n    \"responsible\": \"Jane Doe\"\r\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/subtasks/c0f2135f-a076-4662-8c96-771cfc729596",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subtasks",
+										"c0f2135f-a076-4662-8c96-771cfc729596"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:42:10 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"c0f2135f-a076-4662-8c96-771cfc729596\",\n    \"title\": \"Updated Subtask Title\",\n    \"description\": \"Updated Subtask Description\",\n    \"dueDate\": \"2024-06-28\",\n    \"responsible\": \"Jane Doe\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Subtask",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/subtasks/{{id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"subtasks",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Subtask",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/subtasks/c0f2135f-a076-4662-8c96-771cfc729596",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subtasks",
+										"c0f2135f-a076-4662-8c96-771cfc729596"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "61"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:42:31 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "Deleted subtask with id: c0f2135f-a076-4662-8c96-771cfc729596"
+						}
+					]
+				},
+				{
+					"name": "Get Subtask by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/subtasks/{{id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"subtasks",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Subtask by ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/subtasks/9aab58c0-6a68-498f-862f-6cb65052a135",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subtasks",
+										"9aab58c0-6a68-498f-862f-6cb65052a135"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:43:11 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"9aab58c0-6a68-498f-862f-6cb65052a135\",\n    \"title\": \"New Subtask\",\n    \"description\": \"Subtask Description\",\n    \"dueDate\": \"2024-06-28\",\n    \"responsible\": \"Jane Doe\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Add Comment to Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"content\":\"New Comment\"}"
+						},
+						"url": {
+							"raw": "localhost:8080/comments/task/add/{{taskId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								"task",
+								"add",
+								"{{taskId}}"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Add Comment to Task",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"content\":\"New Comment\"}"
+								},
+								"url": {
+									"raw": "localhost:8080/comments/task/add/{{taskId}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"comments",
+										"task",
+										"add",
+										"{{taskId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "14"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:35:53 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "Comment added!"
+						}
+					]
+				},
+				{
+					"name": "Get Comments by Task ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/comments/task/{{taskId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								"task",
+								"{{taskId}}"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Comments by Task ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/comments/task/0b49ae07-534e-414b-95d7-335d1620dafb",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"comments",
+										"task",
+										"0b49ae07-534e-414b-95d7-335d1620dafb"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:36:11 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"6108b5dc-cee1-4e1a-b7d7-026c1be4a835\",\n        \"content\": \"New Comment\",\n        \"createdDate\": \"2024-06-28 04:35\",\n        \"updatedDate\": \"2024-06-28 04:35\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Update Comment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"content\":\"Updated Comment\"}"
+						},
+						"url": {
+							"raw": "localhost:8080/comments/{{commentId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								"{{commentId}}"
+							],
+							"variable": [
+								{
+									"key": "commentId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Comment",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"content\":\"Updated Comment\"}"
+								},
+								"url": {
+									"raw": "localhost:8080/comments/6108b5dc-cee1-4e1a-b7d7-026c1be4a835",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"comments",
+										"6108b5dc-cee1-4e1a-b7d7-026c1be4a835"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:36:37 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"6108b5dc-cee1-4e1a-b7d7-026c1be4a835\",\n    \"content\": \"Updated Comment\",\n    \"createdDate\": \"2024-06-28 04:35\",\n    \"updatedDate\": \"2024-06-28 04:36\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/comments/{{commentId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								"{{commentId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Comment",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/comments/6108b5dc-cee1-4e1a-b7d7-026c1be4a835",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"comments",
+										"6108b5dc-cee1-4e1a-b7d7-026c1be4a835"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "61"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 01:36:55 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "Deleted comment with id: 6108b5dc-cee1-4e1a-b7d7-026c1be4a835"
+						}
+					]
+				}
+			]
+		}
+	]
+}

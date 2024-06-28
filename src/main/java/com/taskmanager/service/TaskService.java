@@ -3,6 +3,7 @@ package com.taskmanager.service;
 import com.taskmanager.dto.SubTaskRequest;
 import com.taskmanager.dto.TaskDTO;
 import com.taskmanager.dto.TaskRequest;
+import com.taskmanager.dto.TaskUpdateRequest;
 import com.taskmanager.exception.DuplicateTaskException;
 import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.mapper.SubTaskMapper;
@@ -107,38 +108,25 @@ public class TaskService {
     /**
      * Updates an existing task.
      *
-     * @param id      The ID of the task to update.
-     * @param taskDTO The data transfer object representing the updated task.
+     * @param id                The ID of the task to update.
+     * @param taskUpdateRequest The data transfer object representing the updated task.
      * @return The updated TaskDTO if the update was successful.
      * @throws ResourceNotFoundException if the task is not found.
      */
     @Transactional
-    public TaskDTO updateTask(String id, TaskDTO taskDTO) {
+    public TaskDTO updateTask(String id, TaskUpdateRequest taskUpdateRequest) {
         Task existingTask = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
 
-        // Map the DTO to an entity and update its ID to the existing task's ID
-        Task updatedTask = taskMapper.toEntity(taskDTO);
-        updatedTask.setId(existingTask.getId());
+        // Update task fields
+        existingTask.setTitle(taskUpdateRequest.getTitle());
+        existingTask.setDescription(taskUpdateRequest.getDescription());
+        existingTask.setDueDate(taskUpdateRequest.getDueDate());
+        existingTask.setResponsible(taskUpdateRequest.getResponsible());
 
-        // Update parent references for subtasks and keep only the subtasks that are still present
-        if (updatedTask.getSubTasks() != null) {
-            List<SubTask> updatedSubTasks = updatedTask.getSubTasks().stream()
-                    .peek(subTask -> subTask.setParentTask(updatedTask))
-                    .toList();
-
-            existingTask.getSubTasks().clear();
-            existingTask.getSubTasks().addAll(updatedSubTasks);
-        }
-
-        // Update the existing task with new values
-        existingTask.setTitle(updatedTask.getTitle());
-        existingTask.setDescription(updatedTask.getDescription());
-        existingTask.setDueDate(updatedTask.getDueDate());
-        existingTask.setResponsible(updatedTask.getResponsible());
-
-        // Save the updated task and return the DTO
-        return taskMapper.toDto(taskRepository.save(existingTask));
+        // Save updated task and convert to DTO
+        Task savedTask = taskRepository.save(existingTask);
+        return taskMapper.toDto(savedTask);
     }
 
     /**
@@ -148,7 +136,7 @@ public class TaskService {
      * @param subTaskRequest The data transfer object representing the new subtask.
      * @return The updated TaskDTO with the new subtask.
      * @throws ResourceNotFoundException if the task is not found.
-     * @throws DuplicateTaskException if a subtask with the same title already exists in the task.
+     * @throws DuplicateTaskException    if a subtask with the same title already exists in the task.
      */
     @Transactional
     public TaskDTO addSubtask(String taskId, SubTaskRequest subTaskRequest) {

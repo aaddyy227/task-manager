@@ -47,8 +47,8 @@ public class CommentService {
     /**
      * Adds a comment to a specific task.
      *
-     * @param taskId          The ID of the task to add the comment to.
-     * @param commentRequest  The data transfer object representing the new comment.
+     * @param taskId         The ID of the task to add the comment to.
+     * @param commentRequest The data transfer object representing the new comment.
      * @return A message indicating the comment was added.
      * @throws ResourceNotFoundException if the task is not found.
      */

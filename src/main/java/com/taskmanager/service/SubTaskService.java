@@ -1,6 +1,5 @@
 package com.taskmanager.service;
 
-import com.taskmanager.dto.SubTaskRequest;
 import com.taskmanager.dto.SubtaskDTO;
 import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.mapper.SubTaskMapper;
@@ -55,8 +54,8 @@ public class SubTaskService {
     /**
      * Updates an existing subtask by ID.
      *
-     * @param id          The ID of the subtask to update.
-     * @param subTaskDTO  The data transfer object representing the updated subtask.
+     * @param id         The ID of the subtask to update.
+     * @param subTaskDTO The data transfer object representing the updated subtask.
      * @return The updated SubtaskDTO.
      * @throws ResourceNotFoundException if the subtask is not found.
      */

@@ -14,4 +14,5 @@ public interface TaskMapper {
     @Mapping(target = "subTasks", source = "subTasks")
     @Mapping(target = "comments", source = "comments")
     TaskDTO toDto(Task entity);
+
 }
