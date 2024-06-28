@@ -3,8 +3,6 @@ package com.taskmanager.controller;
 import com.taskmanager.dto.SubTaskRequest;
 import com.taskmanager.dto.SubtaskDTO;
 import com.taskmanager.dto.TaskDTO;
-import com.taskmanager.exception.ResourceNotFoundException;
-import com.taskmanager.repository.TaskRepository;
 import com.taskmanager.service.SubTaskService;
 import com.taskmanager.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +15,11 @@ import java.util.List;
 @RequestMapping("/subtasks")
 public class SubTaskController {
     private final SubTaskService subTaskService;
-    private final TaskRepository taskRepository;
     private final TaskService taskService;
 
     @Autowired
-    public SubTaskController(SubTaskService subTaskService, TaskRepository taskRepository, TaskService taskService) {
+    public SubTaskController(SubTaskService subTaskService, TaskService taskService) {
         this.subTaskService = subTaskService;
-        this.taskRepository = taskRepository;
         this.taskService = taskService;
     }
 
@@ -31,8 +27,9 @@ public class SubTaskController {
      * Get all subtasks.
      */
     @GetMapping("/all")
-    public List<SubtaskDTO> getAllSubTasks() {
-        return subTaskService.getAllSubTasks();
+    public ResponseEntity<List<SubtaskDTO>> getAllSubTasks() {
+        List<SubtaskDTO> subtasks = subTaskService.getAllSubTasks();
+        return ResponseEntity.ok(subtasks);
     }
 
     /**
@@ -40,12 +37,8 @@ public class SubTaskController {
      */
     @PostMapping("/{taskId}")
     public ResponseEntity<TaskDTO> addSubTask(@PathVariable String taskId, @RequestBody SubTaskRequest subTaskRequest) {
-        try {
-            TaskDTO createdSubTask = taskService.addSubtask(taskId, subTaskRequest);
-            return ResponseEntity.ok(createdSubTask);
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        TaskDTO createdSubTask = taskService.addSubtask(taskId, subTaskRequest);
+        return ResponseEntity.ok(createdSubTask);
     }
 
     /**
@@ -53,12 +46,8 @@ public class SubTaskController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<SubtaskDTO> getSubTaskById(@PathVariable String id) {
-        try {
-            SubtaskDTO subtaskDTO = subTaskService.getSubTaskById(id);
-            return ResponseEntity.ok(subtaskDTO);
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        SubtaskDTO subtaskDTO = subTaskService.getSubTaskById(id);
+        return ResponseEntity.ok(subtaskDTO);
     }
 
     /**
@@ -66,13 +55,8 @@ public class SubTaskController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<SubtaskDTO> updateSubTask(@PathVariable String id, @RequestBody SubtaskDTO subtaskDTO) {
-        try {
-            SubtaskDTO updatedSubTask = subTaskService.updateSubTask(id, subtaskDTO)
-                    .orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
-            return ResponseEntity.ok(updatedSubTask);
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        SubtaskDTO updatedSubTask = subTaskService.updateSubTask(id, subtaskDTO);
+        return ResponseEntity.ok(updatedSubTask);
     }
 
     /**
@@ -80,10 +64,7 @@ public class SubTaskController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSubTask(@PathVariable String id) {
-        try {
-            return ResponseEntity.ok(subTaskService.deleteSubTask(id));
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        String response = subTaskService.deleteSubTask(id);
+        return ResponseEntity.ok(response);
     }
 }

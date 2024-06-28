@@ -2,7 +2,6 @@ package com.taskmanager.controller;
 
 import com.taskmanager.dto.CommentDTO;
 import com.taskmanager.dto.CommentRequest;
-import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +24,8 @@ public class CommentController {
      */
     @GetMapping("/task/{taskId}")
     public ResponseEntity<List<CommentDTO>> getCommentsByTaskId(@PathVariable String taskId) {
-        try {
-            List<CommentDTO> comments = commentService.getCommentsByTaskId(taskId);
-            return ResponseEntity.ok(comments);
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        List<CommentDTO> comments = commentService.getCommentsByTaskId(taskId);
+        return ResponseEntity.ok(comments);
     }
 
     /**
@@ -38,11 +33,8 @@ public class CommentController {
      */
     @PostMapping("/task/add/{taskId}")
     public ResponseEntity<String> addCommentToTask(@PathVariable String taskId, @RequestBody CommentRequest commentRequest) {
-        try {
-            return ResponseEntity.ok(commentService.addCommentToTask(taskId, commentRequest));
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        String response = commentService.addCommentToTask(taskId, commentRequest);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -50,13 +42,8 @@ public class CommentController {
      */
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentDTO> updateComment(@PathVariable String commentId, @RequestBody CommentDTO commentDTO) {
-        try {
-            CommentDTO updatedComment = commentService.updateComment(commentId, commentDTO)
-                    .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id " + commentId));
-            return ResponseEntity.ok(updatedComment);
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        CommentDTO updatedComment = commentService.updateComment(commentId, commentDTO);
+        return ResponseEntity.ok(updatedComment);
     }
 
     /**
@@ -64,11 +51,7 @@ public class CommentController {
      */
     @DeleteMapping("/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable String commentId) {
-        try {
-            String message = commentService.deleteComment(commentId);
-            return ResponseEntity.ok(message);
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        String message = commentService.deleteComment(commentId);
+        return ResponseEntity.ok(message);
     }
 }

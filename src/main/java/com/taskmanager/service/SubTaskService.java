@@ -9,9 +9,9 @@ import com.taskmanager.repository.SubTaskRepository;
 import com.taskmanager.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +29,9 @@ public class SubTaskService {
     }
 
     /**
-     * Get all subtasks.
+     * Retrieves all subtasks.
+     *
+     * @return A list of SubtaskDTOs representing all subtasks.
      */
     public List<SubtaskDTO> getAllSubTasks() {
         return subTaskRepository.findAll().stream()
@@ -38,7 +40,11 @@ public class SubTaskService {
     }
 
     /**
-     * Get a subtask by its ID.
+     * Retrieves a subtask by its ID.
+     *
+     * @param id The ID of the subtask to retrieve.
+     * @return The SubtaskDTO corresponding to the given ID.
+     * @throws ResourceNotFoundException if the subtask is not found.
      */
     public SubtaskDTO getSubTaskById(String id) {
         return subTaskRepository.findById(id)
@@ -47,25 +53,38 @@ public class SubTaskService {
     }
 
     /**
-     * Update an existing subtask by ID.
+     * Updates an existing subtask by ID.
+     *
+     * @param id          The ID of the subtask to update.
+     * @param subTaskDTO  The data transfer object representing the updated subtask.
+     * @return The updated SubtaskDTO.
+     * @throws ResourceNotFoundException if the subtask is not found.
      */
-    public Optional<SubtaskDTO> updateSubTask(String id, SubtaskDTO subTaskDTO) {
-        return Optional.ofNullable(subTaskRepository.findById(id).map(existingSubTask -> {
-            // Map the DTO to an entity and update its ID to the existing subtask's ID
-            SubTask subTask = subTaskMapper.toEntity(subTaskDTO);
-            subTask.setId(existingSubTask.getId());
-            subTask.setParentTask(existingSubTask.getParentTask());
-            return subTaskMapper.toDto(subTaskRepository.save(subTask));
-        }).orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id)));
+    @Transactional
+    public SubtaskDTO updateSubTask(String id, SubtaskDTO subTaskDTO) {
+        SubTask existingSubTask = subTaskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
+
+        SubTask subTask = subTaskMapper.toEntity(subTaskDTO);
+        subTask.setId(existingSubTask.getId());
+        subTask.setParentTask(existingSubTask.getParentTask());
+
+        return subTaskMapper.toDto(subTaskRepository.save(subTask));
     }
 
     /**
-     * Delete a subtask by its ID.
+     * Deletes a subtask by its ID.
+     *
+     * @param id The ID of the subtask to delete.
+     * @return A message indicating the subtask was deleted.
+     * @throws ResourceNotFoundException if the subtask is not found.
      */
+    @Transactional
     public String deleteSubTask(String id) {
-        return subTaskRepository.findById(id).map(subTask -> {
-            subTaskRepository.delete(subTask);
-            return "Deleted subtask with id: " + id;
-        }).orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
+        SubTask subTask = subTaskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
+
+        subTaskRepository.delete(subTask);
+        return "Deleted subtask with id: " + id;
     }
 }

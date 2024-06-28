@@ -10,10 +10,10 @@ import com.taskmanager.repository.CommentRepository;
 import com.taskmanager.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,20 +30,29 @@ public class CommentService {
     }
 
     /**
-     * Get all comments for a specific task by task ID.
+     * Retrieves all comments for a specific task by task ID.
+     *
+     * @param taskId The ID of the task to retrieve comments for.
+     * @return A list of CommentDTOs representing all comments for the task.
+     * @throws ResourceNotFoundException if no comments are found for the given task ID.
      */
     public List<CommentDTO> getCommentsByTaskId(String taskId) {
-        Optional<List<Comment>> comment = commentRepository.findByTaskId(taskId);
-        if(comment.isPresent()){
-        return comment.get().stream()
+        return commentRepository.findByTaskId(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("No comments for task with id: " + taskId))
+                .stream()
                 .map(commentMapper::toDto)
-                .collect(Collectors.toList());}
-        else throw new ResourceNotFoundException("No comments for task with id: "+taskId);
+                .collect(Collectors.toList());
     }
 
     /**
-     * Add a comment to a specific task.
+     * Adds a comment to a specific task.
+     *
+     * @param taskId          The ID of the task to add the comment to.
+     * @param commentRequest  The data transfer object representing the new comment.
+     * @return A message indicating the comment was added.
+     * @throws ResourceNotFoundException if the task is not found.
      */
+    @Transactional
     public String addCommentToTask(String taskId, CommentRequest commentRequest) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + taskId));
@@ -53,29 +62,38 @@ public class CommentService {
         comment.setCreatedDate(LocalDateTime.now());
         comment.setUpdatedDate(LocalDateTime.now());
         commentRepository.save(comment);
-        task.getComments().add(comment);
-        taskRepository.save(task);
         return "Comment added!";
     }
 
     /**
-     * Update an existing comment by comment ID.
+     * Updates an existing comment by comment ID.
+     *
+     * @param commentId  The ID of the comment to update.
+     * @param commentDTO The data transfer object representing the updated comment.
+     * @return The updated CommentDTO.
+     * @throws ResourceNotFoundException if the comment is not found.
      */
-    public Optional<CommentDTO> updateComment(String commentId, CommentDTO commentDTO) {
-        return Optional.ofNullable(commentRepository.findById(commentId).map(existingComment -> {
-            existingComment.setContent(commentDTO.getContent());
-            existingComment.setUpdatedDate(LocalDateTime.now());
-            return commentMapper.toDto(commentRepository.save(existingComment));
-        }).orElseThrow(() -> new ResourceNotFoundException("Comment not found with id " + commentId)));
+    @Transactional
+    public CommentDTO updateComment(String commentId, CommentDTO commentDTO) {
+        Comment existingComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id " + commentId));
+        existingComment.setContent(commentDTO.getContent());
+        existingComment.setUpdatedDate(LocalDateTime.now());
+        return commentMapper.toDto(commentRepository.save(existingComment));
     }
 
     /**
-     * Delete a comment by comment ID.
+     * Deletes a comment by comment ID.
+     *
+     * @param commentId The ID of the comment to delete.
+     * @return A message indicating the comment was deleted.
+     * @throws ResourceNotFoundException if the comment is not found.
      */
+    @Transactional
     public String deleteComment(String commentId) {
-        return commentRepository.findById(commentId).map(comment -> {
-            commentRepository.delete(comment);
-            return "Deleted comment with id: " + commentId;
-        }).orElseThrow(() -> new ResourceNotFoundException("Comment not found with id " + commentId));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id " + commentId));
+        commentRepository.delete(comment);
+        return "Deleted comment with id: " + commentId;
     }
 }

@@ -14,41 +14,59 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-
-    //Handles all general exceptions.
-
+    // Handles all general exceptions.
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", "An error occurred");
+        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        body.put("error", "Internal Server Error");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false));
 
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
-    //Handles specific exceptions of type ResourceNotFoundException.
+    // Handles specific exceptions of type ResourceNotFoundException.
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Not Found");
         body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false));
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-
-    //Handles validation exceptions for method arguments.
+    // Handles validation exceptions for method arguments.
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex, WebRequest request) {
         Map<String, Object> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage()));
 
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Bad Request");
         body.put("message", "Validation failed");
         body.put("errors", errors);
+        body.put("path", request.getDescription(false));
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    // Handles specific exceptions of type DuplicateTaskException.
+    @ExceptionHandler(DuplicateTaskException.class)
+    public ResponseEntity<Object> handleDuplicateTaskException(DuplicateTaskException ex, WebRequest request) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Bad Request");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false));
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
