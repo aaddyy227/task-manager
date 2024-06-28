@@ -91,14 +91,7 @@ GET /tasks/{id}
       "responsible": "string"
     }
   ],
-  "comments": [
-    {
-      "id": "string",
-      "content": "string",
-      "createdDate": "2024-06-28T00:53:54.435Z",
-      "updatedDate": "2024-06-28T00:53:54.435Z"
-    }
-  ]
+  "comments": []
 }
 ```
 
