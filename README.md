@@ -15,9 +15,9 @@ A comprehensive API for managing tasks, subtasks, and comments within a project.
 
 Ensure you have the following installed:
 
-- [Java 17]
-- [Maven]
-- [MariaDB]
+- Java 17
+- Maven
+- MariaDB
 
 ### Installation
 
@@ -27,7 +27,8 @@ Ensure you have the following installed:
    cd task-manager
    ```
 
-2. **The program will initialize the database automatically, with the "schema.sql" from resources.
+2.1 **The program will initialize the database automatically, with the "schema.sql" from resources.**
+2.2 **You can import the populated sql from resources in your database if you want**
 
 3. **Configure the application:**
 
@@ -90,14 +91,7 @@ GET /tasks/{id}
       "responsible": "string"
     }
   ],
-  "comments": [
-    {
-      "id": "string",
-      "content": "string",
-      "createdDate": "2024-06-28T00:53:54.435Z",
-      "updatedDate": "2024-06-28T00:53:54.435Z"
-    }
-  ]
+  "comments": []
 }
 ```
 
