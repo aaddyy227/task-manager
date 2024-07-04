@@ -12,12 +12,9 @@ CREATE TABLE IF NOT EXISTS Task (
 
 CREATE TABLE IF NOT EXISTS SubTask (
                                        id VARCHAR(36) NOT NULL PRIMARY KEY,
-                                       title VARCHAR(255) NOT NULL,
-                                       description TEXT,
-                                       dueDate DATE,
-                                       responsible VARCHAR(255),
                                        parent_task_id VARCHAR(36),
-                                       FOREIGN KEY (parent_task_id) REFERENCES Task(id)
+                                       FOREIGN KEY (parent_task_id) REFERENCES Task(id),
+                                       FOREIGN KEY (id) REFERENCES Task(id)
 );
 
 CREATE TABLE IF NOT EXISTS Comment (
@@ -27,4 +24,11 @@ CREATE TABLE IF NOT EXISTS Comment (
                                        updatedDate DATETIME,
                                        task_id VARCHAR(36),
                                        FOREIGN KEY (task_id) REFERENCES Task(id)
+);
+
+CREATE TABLE IF NOT EXISTS TaskHistory (
+                                           id VARCHAR(36) NOT NULL PRIMARY KEY,
+                                           modifiedDate DATETIME,
+                                           task_id VARCHAR(36),
+                                           FOREIGN KEY (task_id) REFERENCES Task(id)
 );

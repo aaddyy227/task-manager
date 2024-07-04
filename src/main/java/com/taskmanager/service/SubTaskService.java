@@ -4,12 +4,15 @@ import com.taskmanager.dto.SubtaskDTO;
 import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.mapper.SubTaskMapper;
 import com.taskmanager.model.SubTask;
+import com.taskmanager.model.TaskHistory;
 import com.taskmanager.repository.SubTaskRepository;
-import com.taskmanager.repository.TaskRepository;
+import com.taskmanager.repository.TaskHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,14 +20,14 @@ import java.util.stream.Collectors;
 public class SubTaskService {
 
     private final SubTaskRepository subTaskRepository;
-    private final TaskRepository taskRepository;
     private final SubTaskMapper subTaskMapper;
+    private final TaskHistoryRepository taskHistoryRepository;
 
     @Autowired
-    public SubTaskService(SubTaskRepository subTaskRepository, TaskRepository taskRepository, SubTaskMapper subTaskMapper) {
+    public SubTaskService(SubTaskRepository subTaskRepository, SubTaskMapper subTaskMapper, TaskHistoryRepository taskHistoryRepository) {
         this.subTaskRepository = subTaskRepository;
-        this.taskRepository = taskRepository;
         this.subTaskMapper = subTaskMapper;
+        this.taskHistoryRepository = taskHistoryRepository;
     }
 
     /**
@@ -64,6 +67,9 @@ public class SubTaskService {
         SubTask existingSubTask = subTaskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
 
+        // Save current state to history before making changes
+        saveSubTaskHistory(existingSubTask);
+
         SubTask subTask = subTaskMapper.toEntity(subTaskDTO);
         subTask.setId(existingSubTask.getId());
         subTask.setParentTask(existingSubTask.getParentTask());
@@ -83,7 +89,27 @@ public class SubTaskService {
         SubTask subTask = subTaskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("SubTask not found with id " + id));
 
+        // Save current state to history before deletion
+        saveSubTaskHistory(subTask);
+
         subTaskRepository.delete(subTask);
         return "Deleted subtask with id: " + id;
+    }
+
+    /**
+     * Saves the current state of the given subtask to the history within a transactional context.
+     *
+     * @param subTask The subtask whose state is to be saved.
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveSubTaskHistory(SubTask subTask) {
+        TaskHistory subTaskHistory = new TaskHistory();
+        subTaskHistory.setTask(subTask);
+        subTaskHistory.setTitle(subTask.getTitle());
+        subTaskHistory.setDescription(subTask.getDescription());
+        subTaskHistory.setDueDate(subTask.getDueDate());
+        subTaskHistory.setResponsible(subTask.getResponsible());
+        subTaskHistory.setModifiedDate(LocalDateTime.now());
+        taskHistoryRepository.save(subTaskHistory);
     }
 }

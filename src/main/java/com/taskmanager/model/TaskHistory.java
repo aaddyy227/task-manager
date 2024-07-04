@@ -1,7 +1,6 @@
 package com.taskmanager.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -10,16 +9,19 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@JsonIgnoreProperties({"parentTask"})
-public class SubTask extends Task {
+public class TaskHistory extends Task {
+
+    private LocalDateTime modifiedDate;
 
     @ManyToOne
-    @JoinColumn(name = "parent_task_id")
+    @JoinColumn(name = "task_id")
     @JsonBackReference
-    private Task parentTask;
+    private Task task;
 }

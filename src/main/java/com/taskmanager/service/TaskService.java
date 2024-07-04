@@ -7,17 +7,20 @@ import com.taskmanager.dto.TaskUpdateRequest;
 import com.taskmanager.exception.DuplicateTaskException;
 import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.mapper.SubTaskMapper;
+import com.taskmanager.repository.TaskHistoryRepository;
 import com.taskmanager.mapper.TaskMapper;
 import com.taskmanager.model.SubTask;
 import com.taskmanager.model.Task;
+import com.taskmanager.model.TaskHistory;
 import com.taskmanager.repository.SubTaskRepository;
 import com.taskmanager.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,13 +29,15 @@ public class TaskService {
     private final TaskMapper taskMapper;
     private final SubTaskRepository subTaskRepository;
     private final SubTaskMapper subTaskMapper;
+    private final TaskHistoryRepository taskHistoryRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, SubTaskRepository subTaskRepository, SubTaskMapper subTaskMapper) {
+    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, SubTaskRepository subTaskRepository, SubTaskMapper subTaskMapper, TaskHistoryRepository taskHistoryRepository) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
         this.subTaskRepository = subTaskRepository;
         this.subTaskMapper = subTaskMapper;
+        this.taskHistoryRepository = taskHistoryRepository;
     }
 
     /**
@@ -46,7 +51,6 @@ public class TaskService {
     public List<TaskDTO> getAllTasks(String title, String responsible) {
         List<Task> tasks;
 
-        // Determine the query based on the provided filters
         if (title != null && responsible != null) {
             tasks = taskRepository.findByTitleAndResponsible(title, responsible)
                     .orElseThrow(() -> new ResourceNotFoundException("Tasks not found with title " + title + " and responsible " + responsible));
@@ -63,9 +67,14 @@ public class TaskService {
             }
         }
 
-        // Map the Task entities to TaskDTOs
         return tasks.stream()
-                .map(taskMapper::toDto)
+                .map(task -> {
+                    TaskDTO taskDTO = taskMapper.toDto(task);
+                    taskDTO.setTaskHistoryList(task.getTaskHistoryList().stream()
+                            .map(taskMapper::toHistoryDto)
+                            .collect(Collectors.toList()));
+                    return taskDTO;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -98,10 +107,14 @@ public class TaskService {
 
         Task task = new Task();
         task.setTitle(taskRequest.getTitle());
-        task.setResponsible(taskRequest.getResponsible());
         task.setDescription(taskRequest.getDescription());
         task.setDueDate(taskRequest.getDueDate());
-        taskRepository.save(task);
+        task.setResponsible(taskRequest.getResponsible());
+
+        task = taskRepository.save(task);
+
+        saveTaskHistory(task);
+
         return taskMapper.toDto(task);
     }
 
@@ -117,6 +130,9 @@ public class TaskService {
     public TaskDTO updateTask(String id, TaskUpdateRequest taskUpdateRequest) {
         Task existingTask = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
+
+        // Save current state to history before making changes
+        saveTaskHistory(existingTask);
 
         // Update task fields
         existingTask.setTitle(taskUpdateRequest.getTitle());
@@ -156,7 +172,7 @@ public class TaskService {
         subTask = subTaskRepository.save(subTask);
         task.getSubTasks().add(subTask);
         taskRepository.save(task);
-
+        saveTaskHistory(task);
         // Return the updated TaskDTO
         return taskMapper.toDto(task);
     }
@@ -171,8 +187,28 @@ public class TaskService {
     @Transactional
     public String deleteTask(String id) {
         return taskRepository.findById(id).map(task -> {
+            // Save current state to history before deletion
+            saveTaskHistory(task);
+
             taskRepository.delete(task);
             return "Deleted task with id: " + id;
         }).orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
+    }
+
+    /**
+     * Saves the current state of the given task to the history within a transactional context.
+     *
+     * @param task The task whose state is to be saved.
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveTaskHistory(Task task) {
+        TaskHistory taskHistory = new TaskHistory();
+        taskHistory.setTask(task);
+        taskHistory.setTitle(task.getTitle());
+        taskHistory.setDescription(task.getDescription());
+        taskHistory.setDueDate(task.getDueDate());
+        taskHistory.setResponsible(task.getResponsible());
+        taskHistory.setModifiedDate(LocalDateTime.now());
+        taskHistoryRepository.save(taskHistory);
     }
 }
