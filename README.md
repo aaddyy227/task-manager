@@ -265,7 +265,52 @@ DELETE /comments/{commentId}
 ```json
 "Deleted comment with id: {commentId}"
 ```
+### Task Rollback Controller
 
+#### Rollback Task
+http
+POST /tasks/rollback
+
+**Request Body:**
+```json
+{
+"taskId": "string",
+"timestamp": "2024-06-28T00:53:54.453Z"
+}
+```
+**Response:**
+```json
+{
+"id": "string",
+"title": "string",
+"description": "string",
+"dueDate": "2024-06-28",
+"responsible": "string",
+"subTasks": [],
+"comments": []
+}
+```
+
+#### Get All Task History
+```http
+GET /tasks/{taskId}/history
+```
+**Response:**
+```json
+[
+{
+"id": "string",
+"taskId": "string",
+"title": "string",
+"description": "string",
+"dueDate": "2024-06-28",
+"responsible": "string",
+"subTasks": [],
+"comments": [],
+"timestamp": "2024-06-28T00:53:54.453Z"
+}
+]
+```
 ## Postman Collection
 
 You can find the Postman collection for testing the API [here](https://pastebin.com/raw/B5VVb1g1).
