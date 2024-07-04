@@ -89,40 +89,6 @@ public class TaskServiceTest {
     }
 
     @Test
-    void testGetAllTasks() {
-        TaskHistory taskHistory = new TaskHistory();
-        taskHistory.setId("1");
-        taskHistory.setTitle("Test Task History");
-        taskHistory.setDescription("Test Description History");
-        taskHistory.setDueDate(LocalDate.of(2024, 4, 7));
-        taskHistory.setResponsible("John Doe");
-        taskHistory.setModifiedDate(LocalDateTime.now());
-
-        TaskHistoryDTO taskHistoryDTO = new TaskHistoryDTO();
-        taskHistoryDTO.setId("1");
-        taskHistoryDTO.setTitle("Test Task History");
-        taskHistoryDTO.setDescription("Test Description History");
-        taskHistoryDTO.setDueDate(LocalDate.of(2024, 4, 7));
-        taskHistoryDTO.setResponsible("John Doe");
-        taskHistoryDTO.setModifiedDate(LocalDateTime.now());
-
-        task.setTaskHistoryList(List.of(taskHistory));
-        taskDTO.setTaskHistoryList(List.of(taskHistoryDTO));
-
-        when(taskRepository.findAll()).thenReturn(List.of(task));
-        when(taskMapper.toDto(task)).thenReturn(taskDTO);
-        when(taskMapper.toHistoryDto(taskHistory)).thenReturn(taskHistoryDTO);
-
-        List<TaskDTO> tasks = taskService.getAllTasks(null, null);
-
-        assertEquals(1, tasks.size());
-        assertEquals("Test Task", tasks.get(0).getTitle());
-        assertEquals(1, tasks.get(0).getTaskHistoryList().size());
-        assertEquals("Test Task History", tasks.get(0).getTaskHistoryList().get(0).getTitle());
-        verify(taskRepository, times(1)).findAll();
-    }
-
-    @Test
     void testGetTaskById() {
         when(taskRepository.findById("1")).thenReturn(Optional.of(task));
         when(taskMapper.toDto(task)).thenReturn(taskDTO);
@@ -266,5 +232,38 @@ public class TaskServiceTest {
         verify(taskRepository, times(1)).findByTitle(taskRequest.getTitle());
         verify(taskRepository, never()).save(any(Task.class));
         verify(taskHistoryRepository, never()).save(any(TaskHistory.class));
+    }
+    @Test
+    void testGetAllTasks() {
+        TaskHistory taskHistory = new TaskHistory();
+        taskHistory.setId("1");
+        taskHistory.setTitle("Test Task History");
+        taskHistory.setDescription("Test Description History");
+        taskHistory.setDueDate(LocalDate.of(2024, 4, 7));
+        taskHistory.setResponsible("John Doe");
+        taskHistory.setModifiedDate(LocalDateTime.now());
+
+        TaskHistoryDTO taskHistoryDTO = new TaskHistoryDTO();
+        taskHistoryDTO.setId("1");
+        taskHistoryDTO.setTitle("Test Task History");
+        taskHistoryDTO.setDescription("Test Description History");
+        taskHistoryDTO.setDueDate(LocalDate.of(2024, 4, 7));
+        taskHistoryDTO.setResponsible("John Doe");
+        taskHistoryDTO.setModifiedDate(LocalDateTime.now());
+
+        task.setTaskHistoryList(List.of(taskHistory));
+        taskDTO.setTaskHistoryList(List.of(taskHistoryDTO));
+
+        when(taskRepository.findAll()).thenReturn(List.of(task));
+        when(taskMapper.toDto(task)).thenReturn(taskDTO);
+        when(taskMapper.toHistoryDto(taskHistory)).thenReturn(taskHistoryDTO);
+
+        List<TaskDTO> tasks = taskService.getAllTasks(null, null);
+
+        assertEquals(1, tasks.size());
+        assertEquals("Test Task", tasks.get(0).getTitle());
+        assertEquals(1, tasks.get(0).getTaskHistoryList().size());
+        assertEquals("Test Task History", tasks.get(0).getTaskHistoryList().get(0).getTitle());
+        verify(taskRepository, times(1)).findAll();
     }
 }

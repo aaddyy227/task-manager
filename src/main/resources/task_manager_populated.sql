@@ -21,64 +21,79 @@ USE `task_manager`;
 
 -- Dumping structure for table task_manager.comment
 CREATE TABLE IF NOT EXISTS `comment` (
-  `id` varchar(36) NOT NULL,
-  `content` text NOT NULL,
-  `createdDate` datetime DEFAULT NULL,
-  `updatedDate` datetime DEFAULT NULL,
-  `task_id` varchar(36) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `task_id` (`task_id`),
-  CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`)
+                                         `id` varchar(36) NOT NULL,
+                                         `content` text NOT NULL,
+                                         `createdDate` datetime DEFAULT NULL,
+                                         `updatedDate` datetime DEFAULT NULL,
+                                         `task_id` varchar(36) DEFAULT NULL,
+                                         PRIMARY KEY (`id`),
+                                         KEY `task_id` (`task_id`),
+                                         CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table task_manager.comment: ~2 rows (approximately)
+-- Dumping data for table task_manager.comment: ~0 rows (approximately)
 INSERT INTO `comment` (`id`, `content`, `createdDate`, `updatedDate`, `task_id`) VALUES
-	('33c60eba-cf26-4625-8096-5267c1fdad53', 'This is a comment.TEST#3', '2024-06-28 03:17:36', '2024-06-28 03:17:36', 'b04d19cc-4ec7-4c75-8ab0-b376e39acbc3');
-INSERT INTO `comment` (`id`, `content`, `createdDate`, `updatedDate`, `task_id`) VALUES
-	('64bb36f4-3fbf-464b-9913-6d537e357819', 'This is a comment.TEST#2', '2024-06-28 03:17:32', '2024-06-28 03:17:32', 'b04d19cc-4ec7-4c75-8ab0-b376e39acbc3');
+    ('d6559de4-a507-415a-81d3-e47604347c53', 'New Comment', '2024-07-04 17:44:03', '2024-07-04 17:44:03', '858cd548-2437-4677-ae87-d4b27a16b0a8');
 
 -- Dumping structure for table task_manager.subtask
 CREATE TABLE IF NOT EXISTS `subtask` (
-  `id` varchar(36) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `dueDate` date DEFAULT NULL,
-  `responsible` varchar(255) DEFAULT NULL,
-  `parent_task_id` varchar(36) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `parent_task_id` (`parent_task_id`),
-  CONSTRAINT `subtask_ibfk_1` FOREIGN KEY (`parent_task_id`) REFERENCES `task` (`id`)
+                                         `id` varchar(36) NOT NULL,
+                                         `parent_task_id` varchar(36) DEFAULT NULL,
+                                         PRIMARY KEY (`id`),
+                                         KEY `parent_task_id` (`parent_task_id`),
+                                         CONSTRAINT `subtask_ibfk_1` FOREIGN KEY (`parent_task_id`) REFERENCES `task` (`id`),
+                                         CONSTRAINT `subtask_ibfk_2` FOREIGN KEY (`id`) REFERENCES `task` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table task_manager.subtask: ~3 rows (approximately)
-INSERT INTO `subtask` (`id`, `title`, `description`, `dueDate`, `responsible`, `parent_task_id`) VALUES
-	('1cfd3df9-321f-4787-97c8-23274c2d9112', 'New Subtask 12', 'Subtask Description', '2024-06-28', 'Jane Doe', '3b563914-9dd5-4ff5-90e2-827f6cf032d4');
-INSERT INTO `subtask` (`id`, `title`, `description`, `dueDate`, `responsible`, `parent_task_id`) VALUES
-	('38ce2532-4c76-4d02-bbc8-d5a7e603aa13', 'SubTask Title1', 'SubTask Description', '2024-06-26', 'Jane Doe', 'b04d19cc-4ec7-4c75-8ab0-b376e39acbc3');
-INSERT INTO `subtask` (`id`, `title`, `description`, `dueDate`, `responsible`, `parent_task_id`) VALUES
-	('9aab58c0-6a68-498f-862f-6cb65052a135', 'New Subtask', 'Subtask Description', '2024-06-28', 'Jane Doe', '3b563914-9dd5-4ff5-90e2-827f6cf032d4');
+-- Dumping data for table task_manager.subtask: ~0 rows (approximately)
+INSERT INTO `subtask` (`id`, `parent_task_id`) VALUES
+    ('1e2d0f33-8731-4daf-acc0-31b1462f39ea', '858cd548-2437-4677-ae87-d4b27a16b0a8');
 
 -- Dumping structure for table task_manager.task
 CREATE TABLE IF NOT EXISTS `task` (
-  `id` varchar(36) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `dueDate` date DEFAULT NULL,
-  `responsible` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+                                      `id` varchar(36) NOT NULL,
+                                      `title` varchar(255) NOT NULL,
+                                      `description` text DEFAULT NULL,
+                                      `dueDate` date DEFAULT NULL,
+                                      `responsible` varchar(255) DEFAULT NULL,
+                                      PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table task_manager.task: ~5 rows (approximately)
+-- Dumping data for table task_manager.task: ~0 rows (approximately)
 INSERT INTO `task` (`id`, `title`, `description`, `dueDate`, `responsible`) VALUES
-	('3b563914-9dd5-4ff5-90e2-827f6cf032d4', 'New Task', 'Task Description', '2024-06-28', 'John Doe');
+    ('1e2d0f33-8731-4daf-acc0-31b1462f39ea', 'New Subtask 12', 'Subtask Description', '2024-06-28', 'Jane Doe');
 INSERT INTO `task` (`id`, `title`, `description`, `dueDate`, `responsible`) VALUES
-	('4146fcf2-8388-43bb-a61b-4f3f1de8f622', 'New Task 123', 'Task Description', '2024-06-28', 'John Doe');
+    ('28520418-f92c-4717-8665-ffe75b9ffa43', 'New Task 123', 'Task Description', '2024-06-28', 'John Doe');
 INSERT INTO `task` (`id`, `title`, `description`, `dueDate`, `responsible`) VALUES
-	('9eb70367-0858-4c4d-a11f-989b1826049f', 'Task Title 12', 'Task Description', '2024-06-26', 'John Doe');
+    ('858cd548-2437-4677-ae87-d4b27a16b0a8', 'Updated Task Title123', 'Updated Task Description', '2024-06-28', 'John Doe');
 INSERT INTO `task` (`id`, `title`, `description`, `dueDate`, `responsible`) VALUES
-	('b04d19cc-4ec7-4c75-8ab0-b376e39acbc3', 'Updated Task Title', 'Updated Task Description', '2024-06-26', 'John Doe');
+    ('922ca550-f9e6-406e-ae81-828d76172dca', 'New Task 1245s3', 'Task Description', '2024-06-28', 'John Doe');
 INSERT INTO `task` (`id`, `title`, `description`, `dueDate`, `responsible`) VALUES
-	('d45d0650-b5d0-4d4f-81c2-d91d9299f7f2', 'Task Title 1234', 'Task Description', '2024-06-26', 'John Doe');
+    ('d113e489-2843-4c20-841e-00b5d69f0170', 'Updated Task Title123', 'Updated Task Description', '2024-06-28', 'John Doe');
+INSERT INTO `task` (`id`, `title`, `description`, `dueDate`, `responsible`) VALUES
+    ('d22518ef-931a-4319-a5ef-1f585a8432cc', 'New Task 1245s3', 'Task Description', '2024-06-28', 'John Doe');
+INSERT INTO `task` (`id`, `title`, `description`, `dueDate`, `responsible`) VALUES
+    ('ec199e08-72c5-4dd4-82c0-3d0dfbb37d98', 'New Task 123', 'Task Description', '2024-06-28', 'John Doe');
+
+-- Dumping structure for table task_manager.taskhistory
+CREATE TABLE IF NOT EXISTS `taskhistory` (
+                                             `id` varchar(36) NOT NULL,
+                                             `modifiedDate` datetime DEFAULT NULL,
+                                             `task_id` varchar(36) DEFAULT NULL,
+                                             PRIMARY KEY (`id`),
+                                             KEY `task_id` (`task_id`),
+                                             CONSTRAINT `taskhistory_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table task_manager.taskhistory: ~0 rows (approximately)
+INSERT INTO `taskhistory` (`id`, `modifiedDate`, `task_id`) VALUES
+    ('28520418-f92c-4717-8665-ffe75b9ffa43', '2024-07-04 18:09:06', 'ec199e08-72c5-4dd4-82c0-3d0dfbb37d98');
+INSERT INTO `taskhistory` (`id`, `modifiedDate`, `task_id`) VALUES
+    ('922ca550-f9e6-406e-ae81-828d76172dca', '2024-07-04 17:43:18', '858cd548-2437-4677-ae87-d4b27a16b0a8');
+INSERT INTO `taskhistory` (`id`, `modifiedDate`, `task_id`) VALUES
+    ('d113e489-2843-4c20-841e-00b5d69f0170', '2024-07-04 17:44:15', '858cd548-2437-4677-ae87-d4b27a16b0a8');
+INSERT INTO `taskhistory` (`id`, `modifiedDate`, `task_id`) VALUES
+    ('d22518ef-931a-4319-a5ef-1f585a8432cc', '2024-07-04 17:42:09', '858cd548-2437-4677-ae87-d4b27a16b0a8');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

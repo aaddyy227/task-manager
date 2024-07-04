@@ -1,11 +1,11 @@
 {
 	"info": {
-		"_postman_id": "640dbb6b-9daf-481d-9918-1daddedfb053",
+		"_postman_id": "67859457-1a2d-4471-aa20-68ddbae47992",
 		"name": "TaskManager API",
 		"description": "A collection of APIs for the TaskManager application.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "8758401",
-		"_collection_link": "https://task-manager-api-6450.postman.co/workspace/Task-Manager-API-Workspace~6bd3653c-66ab-4b5a-8719-5b8a304571bd/collection/8758401-640dbb6b-9daf-481d-9918-1daddedfb053?action=share&source=collection_link&creator=8758401"
+		"_collection_link": "https://task-manager-api-6450.postman.co/workspace/Task-Manager-API-Workspace~6bd3653c-66ab-4b5a-8719-5b8a304571bd/collection/8758401-67859457-1a2d-4471-aa20-68ddbae47992?action=share&source=collection_link&creator=8758401"
 	},
 	"item": [
 		{
@@ -1106,6 +1106,59 @@
 							"body": "Deleted comment with id: 6108b5dc-cee1-4e1a-b7d7-026c1be4a835"
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "History and Rollback",
+			"item": [
+				{
+					"name": "Rollback Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"taskId\": \"{{taskId}}\",\n    \"historyId\": \"{{historyId}}\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/tasks/rollback",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"rollback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Task History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/tasks/{{taskId}}/history",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"{{taskId}}",
+								"history"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

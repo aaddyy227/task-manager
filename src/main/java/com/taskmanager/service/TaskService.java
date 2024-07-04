@@ -7,12 +7,12 @@ import com.taskmanager.dto.TaskUpdateRequest;
 import com.taskmanager.exception.DuplicateTaskException;
 import com.taskmanager.exception.ResourceNotFoundException;
 import com.taskmanager.mapper.SubTaskMapper;
-import com.taskmanager.repository.TaskHistoryRepository;
 import com.taskmanager.mapper.TaskMapper;
 import com.taskmanager.model.SubTask;
 import com.taskmanager.model.Task;
 import com.taskmanager.model.TaskHistory;
 import com.taskmanager.repository.SubTaskRepository;
+import com.taskmanager.repository.TaskHistoryRepository;
 import com.taskmanager.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,16 +68,30 @@ public class TaskService {
             }
         }
 
+        // Collect task IDs that are subtasks
+        Set<String> subTaskIds = tasks.stream()
+                .filter(task -> task instanceof SubTask)
+                .map(Task::getId)
+                .collect(Collectors.toSet());
+
+        // Filter out subtasks from the main task list
+
         return tasks.stream()
+                .filter(task -> !subTaskIds.contains(task.getId()) && !(task instanceof TaskHistory))
                 .map(task -> {
                     TaskDTO taskDTO = taskMapper.toDto(task);
-                    taskDTO.setTaskHistoryList(task.getTaskHistoryList().stream()
-                            .map(taskMapper::toHistoryDto)
-                            .collect(Collectors.toList()));
+                    if (task.getTaskHistoryList() != null) {
+                        taskDTO.setTaskHistoryList(task.getTaskHistoryList().stream()
+                                .map(taskMapper::toHistoryDto)
+                                .collect(Collectors.toList()));
+                    }
                     return taskDTO;
                 })
                 .collect(Collectors.toList());
     }
+
+
+
 
     /**
      * Retrieves a task by its ID.
